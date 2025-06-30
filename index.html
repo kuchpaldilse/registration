@@ -14,24 +14,20 @@
       padding: 30px 15px;
       margin: 0;
     }
-
     .container {
       width: 100%;
       max-width: 500px;
       text-align: center;
     }
-
     h2 {
       font-size: 2rem;
       margin-bottom: 10px;
     }
-
     p.description {
       font-size: 1.1rem;
       margin-bottom: 30px;
       color: #333;
     }
-
     input {
       font-size: 1.1rem;
       padding: 12px;
@@ -39,12 +35,10 @@
       width: 100%;
       box-sizing: border-box;
     }
-
     input[readonly] {
       background-color: #f0f0f0;
       color: #555;
     }
-
     button {
       font-size: 1.1rem;
       padding: 10px 20px;
@@ -54,37 +48,30 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
     .message-box {
       display: none;
       font-size: 1.3rem;
       margin-top: 20px;
     }
-
     .success {
       color: green;
     }
-
     .error {
       color: red;
     }
-
     .error-detail {
       font-size: 0.95rem;
       color: #555;
       margin-top: 5px;
     }
-
     .privacy {
       font-size: 0.9rem;
       color: gray;
       margin-top: 40px;
     }
-
     @media (max-width: 480px) {
       h2 {
         font-size: 1.6rem;
@@ -139,7 +126,7 @@
     const addNewBtn = document.getElementById('addNewBtn');
     const retryBtn = document.getElementById('retryBtn');
 
-    // Fetch location from IP-based API
+    // Fetch location using IPAPI (no prompt!)
     let locationString = "Location unavailable";
     fetch("https://ipapi.co/json/")
       .then(res => res.json())
@@ -158,9 +145,9 @@
       submitBtn.textContent = "Processing...";
 
       const formData = new FormData(form);
-      formData.set("location", locationField.value); // Make sure it's attached
+      formData.set("location", locationField.value); // overwrite to ensure consistency
 
-      fetch('https://script.google.com/macros/s/AKfycbz7SQfVlNhu60rmEZ6iD_pJ5ATV4x9hC__KDUDbkMRpz7WYZn5gShCWAxnsZ7cTjZ-tNA/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbzo8-S43o9Gyk8rObxFDiPyOfSFH4whF1PnMuYyHIw2iNp0qG_Q2wU98NAyZD6eGzS2Kg/exec', {
         method: 'POST',
         body: formData
       })
@@ -170,7 +157,7 @@
           errorMsg.style.display = 'none';
           successMsg.style.display = 'block';
         } else {
-          throw new Error("Response not OK (Server error)");
+          throw new Error("Server error");
         }
       })
       .catch(error => {
