@@ -11,27 +11,35 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      padding: 30px;
+      min-height: 100vh;
       margin: 0;
+      text-align: center;
     }
     h2 {
       font-size: 2rem;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+    }
+    p.description {
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin-bottom: 30px;
+      color: #333;
     }
     input {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       padding: 10px;
       margin: 10px 0;
       width: 90%;
       max-width: 400px;
     }
     button {
-      font-size: 1.5rem;
-      padding: 12px 25px;
+      font-size: 1.2rem;
+      padding: 10px 20px;
       background-color: #007BFF;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
     }
     button:hover {
@@ -39,32 +47,55 @@
     }
     .thank-you {
       display: none;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: green;
       margin-top: 20px;
+    }
+    .privacy {
+      font-size: 0.9rem;
+      color: gray;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
-  <h2>Please Enter Your Details</h2>
-  <form action="https://script.google.com/macros/s/AKfycbz7SQfVlNhu60rmEZ6iD_pJ5ATV4x9hC__KDUDbkMRpz7WYZn5gShCWAxnsZ7cTjZ-tNA/exec" method="POST">
-  <input type="text" name="name" placeholder="Full Name" required>
-  <br>
-  <input type="tel" name="mobile" placeholder="Mobile Number" required>
-  <br><br>
-  <button type="submit">Submit</button>
-</form>
- 
+  <h2>Event Check-In</h2>
+  <p class="description">Please enter your name and mobile number to confirm your participation. This will help us streamline entry at the event.</p>
+
+  <form id="checkInForm">
+    <input type="text" name="name" placeholder="Full Name" required><br>
+    <input type="tel" name="mobile" placeholder="Mobile Number" required><br>
+    <button type="submit">Submit</button>
+  </form>
+
   <div class="thank-you" id="thanksMsg">✅ Thank you! You're checked in.</div>
-  <p style="margin-top: 30px; font-size: 0.9rem; color: gray;">
-  *This information will be used only for registration purposes.
-  </p>
+
+  <p class="privacy">*Your details are stored securely and used only for event registration purposes. We respect your privacy.</p>
+
   <script>
-    function showMessage() {
-      document.querySelector('form').style.display = 'none';
-      document.getElementById('thanksMsg').style.display = 'block';
-    }
+    const form = document.getElementById('checkInForm');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      fetch('https://script.google.com/macros/s/AKfycbz7SQfVlNhu60rmEZ6iD_pJ5ATV4x9hC__KDUDbkMRpz7WYZn5gShCWAxnsZ7cTjZ-tNA/exec', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          form.style.display = 'none';
+          document.getElementById('thanksMsg').style.display = 'block';
+        } else {
+          alert("There was a problem submitting the form. Please try again.");
+        }
+      })
+      .catch(error => {
+        console.error('Error!', error.message);
+        alert("Submission failed. Please check your internet connection.");
+      });
+    });
   </script>
 
 </body>
