@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Check-In Form</title>
+  <title>Sr. Citizens Community Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,31 +11,37 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 30px;
-      min-height: 100vh;
+      padding: 30px 15px;
       margin: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
       text-align: center;
     }
+
     h2 {
       font-size: 2rem;
       margin-bottom: 10px;
     }
+
     p.description {
       font-size: 1.1rem;
-      max-width: 500px;
       margin-bottom: 30px;
       color: #333;
     }
+
     input {
-      font-size: 1.2rem;
-      padding: 10px;
+      font-size: 1.1rem;
+      padding: 12px;
       margin: 10px 0;
-      width: 90%;
-      max-width: 400px;
+      width: 100%;
+      box-sizing: border-box;
     }
+
     button {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       padding: 10px 20px;
       background-color: #007BFF;
       color: white;
@@ -42,49 +49,94 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #0056b3;
     }
-    .thank-you {
+
+    .message-box {
       display: none;
-      font-size: 1.5rem;
-      color: green;
+      font-size: 1.3rem;
       margin-top: 20px;
     }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .error-detail {
+      font-size: 0.95rem;
+      color: #555;
+      margin-top: 5px;
+    }
+
     .privacy {
       font-size: 0.9rem;
       color: gray;
       margin-top: 40px;
-      max-width: 500px;
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.6rem;
+      }
+      .description, .privacy {
+        font-size: 1rem;
+      }
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h2>Event Check-In</h2>
-  <p class="description">Please enter your name and mobile number to confirm your participation. This will help us streamline entry at the event.</p>
+  <div class="container">
+    <h2>Sr. Citizens Community Signup</h2>
+    <p class="description">Welcome to Kuch Pal Dil Se, a heartfelt space dedicated to senior citizens. By joining this community, you'll stay informed about upcoming events, enjoy musical and thoughtful moments curated just for you. Our mission is to foster joy, connection, and well-being through meaningful interactions.</p>
 
-  <form id="checkInForm">
-    <input type="text" name="name" placeholder="Full Name" required><br>
-    <input type="tel" name="mobile" placeholder="Mobile Number" required><br>
-    <div id="buttonGroup">
-      <button type="submit" id="submitBtn">Submit</button>
+    <form id="checkInForm">
+      <input type="text" name="name" placeholder="Full Name" required><br>
+      <input type="tel" name="mobile" placeholder="Mobile Number" required><br>
+      <div id="buttonGroup">
+        <button type="submit" id="submitBtn">Submit</button>
+      </div>
+    </form>
+
+    <div class="message-box success" id="successMsg">
+      ✅ Thank you! You're checked in.
+      <button id="retryBtn" style="margin-left: 20px;">Retry</button>
     </div>
-  </form>
 
-  <div class="thank-you" id="thanksMsg">
-    ✅ Thank you! You're checked in.
-    <button id="addNewBtn" style="margin-left: 20px;">Add New</button>
+    <div class="message-box error" id="errorMsg">
+      ❌ Error submitting the form.
+      <div class="error-detail" id="errorDetail"></div>
+      <button id="retryBtnError" style="margin-top: 10px;">Retry</button>
+    </div>
+
+    <p class="privacy">Your above details will be used only for community-related updates. We respect your privacy and will not share above information externally.</p>
   </div>
-
-  <p class="privacy">*Your details are stored securely and used only for event registration purposes. We respect your privacy.</p>
 
   <script>
     const form = document.getElementById('checkInForm');
     const submitBtn = document.getElementById('submitBtn');
-    const thanksMsg = document.getElementById('thanksMsg');
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
+    const errorDetail = document.getElementById('errorDetail');
     const buttonGroup = document.getElementById('buttonGroup');
-    const addNewBtn = document.getElementById('addNewBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const retryBtnError = document.getElementById('retryBtnError');
+
+    function resetFormView() {
+      form.reset();
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+      buttonGroup.style.display = 'block';
+    }
 
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -97,22 +149,22 @@
       .then(response => {
         if (response.ok) {
           buttonGroup.style.display = 'none';
-          thanksMsg.style.display = 'block';
+          successMsg.style.display = 'block';
+          errorMsg.style.display = 'none';
         } else {
-          alert("Submission failed. Please try again.");
+          throw new Error("Response not OK (Server error)");
         }
       })
       .catch(error => {
-        alert("There was a problem submitting the form. Please check your connection.");
-        console.error('Error!', error.message);
+        buttonGroup.style.display = 'none';
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'block';
+        errorDetail.textContent = `Reason: ${error.message}`;
       });
     });
 
-    addNewBtn.addEventListener('click', () => {
-      form.reset();
-      buttonGroup.style.display = 'block';
-      thanksMsg.style.display = 'none';
-    });
+    retryBtn.addEventListener('click', resetFormView);
+    retryBtnError.addEventListener('click', resetFormView);
   </script>
 
 </body>
