@@ -146,7 +146,7 @@
 
       const formData = new FormData(form);
       formData.set("location", locationField.value); // overwrite to ensure consistency
-
+      console.log("Submitting location:", locationField.value);
       fetch('https://script.google.com/macros/s/AKfycbzo8-S43o9Gyk8rObxFDiPyOfSFH4whF1PnMuYyHIw2iNp0qG_Q2wU98NAyZD6eGzS2Kg/exec', {
         method: 'POST',
         body: formData
