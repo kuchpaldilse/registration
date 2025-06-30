@@ -40,6 +40,11 @@
       box-sizing: border-box;
     }
 
+    input[readonly] {
+      background-color: #f0f0f0;
+      color: #555;
+    }
+
     button {
       font-size: 1.1rem;
       padding: 10px 20px;
@@ -94,7 +99,6 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <h2>Sr. Citizens Community Signup</h2>
     <p class="description">Welcome to Kuch Pal Dil Se, a heartfelt space dedicated to senior citizens. By joining this community, you'll stay informed about upcoming events, enjoy musical and thoughtful moments curated just for you. Our mission is to foster joy, connection, and well-being through meaningful interactions.</p>
@@ -102,20 +106,23 @@
     <form id="checkInForm">
       <input type="text" name="name" placeholder="Full Name" required><br>
       <input type="tel" name="mobile" placeholder="Mobile Number" required><br>
+      <input type="text" name="location" id="locationField" placeholder="Detecting location..." readonly><br>
       <div id="buttonGroup">
         <button type="submit" id="submitBtn">Submit</button>
       </div>
     </form>
 
     <div class="message-box success" id="successMsg">
-      ✅ Thank you!
-      <button id="retryBtn" style="margin-left: 20px;">Retry</button>
+      ✅ Thank you! You're checked in.
+      <br><br>
+      <button id="addNewBtn">Add New</button>
     </div>
 
     <div class="message-box error" id="errorMsg">
       ❌ Error submitting the form.
       <div class="error-detail" id="errorDetail"></div>
-      <button id="retryBtnError" style="margin-top: 10px;">Retry</button>
+      <br>
+      <button id="retryBtn">Retry</button>
     </div>
 
     <p class="privacy">Your above details will be used only for community-related updates. We respect your privacy and will not share above information externally.</p>
@@ -124,23 +131,34 @@
   <script>
     const form = document.getElementById('checkInForm');
     const submitBtn = document.getElementById('submitBtn');
+    const locationField = document.getElementById('locationField');
     const successMsg = document.getElementById('successMsg');
     const errorMsg = document.getElementById('errorMsg');
     const errorDetail = document.getElementById('errorDetail');
     const buttonGroup = document.getElementById('buttonGroup');
+    const addNewBtn = document.getElementById('addNewBtn');
     const retryBtn = document.getElementById('retryBtn');
-    const retryBtnError = document.getElementById('retryBtnError');
 
-    function resetFormView() {
-      form.reset();
-      successMsg.style.display = 'none';
-      errorMsg.style.display = 'none';
-      buttonGroup.style.display = 'block';
-    }
+    // Fetch location from IP-based API
+    let locationString = "Location unavailable";
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        locationString = `${data.city}, ${data.region}, ${data.country_name}`;
+        locationField.value = locationString;
+      })
+      .catch(() => {
+        locationField.value = locationString;
+      });
 
     form.addEventListener('submit', e => {
       e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Processing...";
+
       const formData = new FormData(form);
+      formData.set("location", locationField.value); // Make sure it's attached
 
       fetch('https://script.google.com/macros/s/AKfycbz7SQfVlNhu60rmEZ6iD_pJ5ATV4x9hC__KDUDbkMRpz7WYZn5gShCWAxnsZ7cTjZ-tNA/exec', {
         method: 'POST',
@@ -149,8 +167,8 @@
       .then(response => {
         if (response.ok) {
           buttonGroup.style.display = 'none';
-          successMsg.style.display = 'block';
           errorMsg.style.display = 'none';
+          successMsg.style.display = 'block';
         } else {
           throw new Error("Response not OK (Server error)");
         }
@@ -160,12 +178,24 @@
         successMsg.style.display = 'none';
         errorMsg.style.display = 'block';
         errorDetail.textContent = `Reason: ${error.message}`;
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
       });
     });
 
-    retryBtn.addEventListener('click', resetFormView);
-    retryBtnError.addEventListener('click', resetFormView);
-  </script>
+    addNewBtn.addEventListener('click', () => {
+      form.reset();
+      locationField.value = locationString;
+      successMsg.style.display = 'none';
+      buttonGroup.style.display = 'block';
+    });
 
+    retryBtn.addEventListener('click', () => {
+      errorMsg.style.display = 'none';
+      buttonGroup.style.display = 'block';
+    });
+  </script>
 </body>
 </html>
