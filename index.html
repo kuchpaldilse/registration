@@ -18,25 +18,7 @@
       font-size: 2rem;
       margin-bottom: 20px;
     }
-    input {
-      font-size: 1.5rem;
-      padding: 10px;
-      margin: 10px 0;
-      width: 90%;
-      max-width: 400px;
-    }
-    button {
-      font-size: 1.5rem;
-      padding: 12px 25px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
+       
     .thank-you {
       display: none;
       font-size: 1.8rem;
@@ -47,22 +29,10 @@
 </head>
 <body>
 
-  <h2>Please Enter Your Details</h2>
-  <form onsubmit="showMessage(); return false;">
-    <input type="text" placeholder="Full Name" required>
-    <br>
-    <input type="tel" placeholder="Mobile Number" required>
-    <br>
-    <button type="submit">Submit</button>
-  </form>
-  <div class="thank-you" id="thanksMsg">✅ Thank you! You're checked in.</div>
-
-  <script>
-    function showMessage() {
-      document.querySelector('form').style.display = 'none';
-      document.getElementById('thanksMsg').style.display = 'block';
-    }
-  </script>
+ <h2>Please Register</h2>
+<a href="https://forms.gle/1YSSFJqwZhikGwsp6" target="_blank">
+  <button>Go to Registration Form</button>
+</a>
 
 </body>
 </html>
