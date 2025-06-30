@@ -95,7 +95,7 @@
       <input type="tel" name="mobile" placeholder="Mobile Number" required><br>
       <input type="text" name="location" id="locationField" placeholder="Detecting location..." readonly><br>
       <div id="buttonGroup">
-        <button type="submit" id="submitBtn">Submit</button>
+        <button type="submit" id="submitBtn" disabled>Submit</button>
       </div>
     </form>
 
@@ -126,16 +126,19 @@
     const addNewBtn = document.getElementById('addNewBtn');
     const retryBtn = document.getElementById('retryBtn');
 
-    // Fetch location using IPAPI (no prompt!)
     let locationString = "Location unavailable";
+    submitBtn.disabled = true; // prevent early submission
+
     fetch("https://ipapi.co/json/")
       .then(res => res.json())
       .then(data => {
         locationString = `${data.city}, ${data.region}, ${data.country_name}`;
         locationField.value = locationString;
+        submitBtn.disabled = false;
       })
       .catch(() => {
         locationField.value = locationString;
+        submitBtn.disabled = false;
       });
 
     form.addEventListener('submit', e => {
@@ -145,8 +148,8 @@
       submitBtn.textContent = "Processing...";
 
       const formData = new FormData(form);
-      formData.set("location", locationField.value); // overwrite to ensure consistency
-      console.log("Submitting location:", locationField.value);
+      formData.set("location", locationField.value); // ensure it's present
+
       fetch('https://script.google.com/macros/s/AKfycbzo8-S43o9Gyk8rObxFDiPyOfSFH4whF1PnMuYyHIw2iNp0qG_Q2wU98NAyZD6eGzS2Kg/exec', {
         method: 'POST',
         body: formData
