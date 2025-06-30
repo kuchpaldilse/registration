@@ -55,6 +55,7 @@
       font-size: 0.9rem;
       color: gray;
       margin-top: 40px;
+      max-width: 500px;
     }
   </style>
 </head>
@@ -66,35 +67,51 @@
   <form id="checkInForm">
     <input type="text" name="name" placeholder="Full Name" required><br>
     <input type="tel" name="mobile" placeholder="Mobile Number" required><br>
-    <button type="submit">Submit</button>
+    <div id="buttonGroup">
+      <button type="submit" id="submitBtn">Submit</button>
+    </div>
   </form>
 
-  <div class="thank-you" id="thanksMsg">✅ Thank you! You're checked in.</div>
+  <div class="thank-you" id="thanksMsg">
+    ✅ Thank you! You're checked in.
+    <button id="addNewBtn" style="margin-left: 20px;">Add New</button>
+  </div>
 
   <p class="privacy">*Your details are stored securely and used only for event registration purposes. We respect your privacy.</p>
 
   <script>
     const form = document.getElementById('checkInForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const thanksMsg = document.getElementById('thanksMsg');
+    const buttonGroup = document.getElementById('buttonGroup');
+    const addNewBtn = document.getElementById('addNewBtn');
+
     form.addEventListener('submit', e => {
       e.preventDefault();
-
       const formData = new FormData(form);
+
       fetch('https://script.google.com/macros/s/AKfycbz7SQfVlNhu60rmEZ6iD_pJ5ATV4x9hC__KDUDbkMRpz7WYZn5gShCWAxnsZ7cTjZ-tNA/exec', {
         method: 'POST',
         body: formData
       })
       .then(response => {
         if (response.ok) {
-          form.style.display = 'none';
-          document.getElementById('thanksMsg').style.display = 'block';
+          buttonGroup.style.display = 'none';
+          thanksMsg.style.display = 'block';
         } else {
-          alert("There was a problem submitting the form. Please try again.");
+          alert("Submission failed. Please try again.");
         }
       })
       .catch(error => {
+        alert("There was a problem submitting the form. Please check your connection.");
         console.error('Error!', error.message);
-        alert("Submission failed. Please check your internet connection.");
       });
+    });
+
+    addNewBtn.addEventListener('click', () => {
+      form.reset();
+      buttonGroup.style.display = 'block';
+      thanksMsg.style.display = 'none';
     });
   </script>
 
