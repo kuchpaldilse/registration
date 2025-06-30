@@ -29,10 +29,21 @@
 </head>
 <body>
 
- <h2>Please Register</h2>
-<a href="https://forms.gle/1YSSFJqwZhikGwsp6" target="_blank">
-  <button>Go to Registration Form</button>
-</a>
+<h2>Welcome to Our Event Check-In</h2>
+<p>Please enter your details to confirm your attendance. We respect your privacy and will not share your information.</p>
 
+<form onsubmit="showMessage(); return false;">
+  <input type="text" placeholder="Full Name" required>
+  <br>
+  <input type="tel" placeholder="Mobile Number" required>
+  <br>
+  <button type="submit">Check In</button>
+</form>
+
+<div class="thank-you" id="thanksMsg">✅ Thank you! You’re checked in.</div>
+
+<p style="margin-top: 30px; font-size: 0.9rem; color: gray;">
+  *This information will be used only for registration purposes.
+</p>
 </body>
 </html>
