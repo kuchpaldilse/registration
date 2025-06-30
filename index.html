@@ -48,9 +48,13 @@
 <body>
 
   <h2>Please Enter Your Details</h2>
-  <a href="https://www.appsheet.com/start/d4897599-65fd-4eb6-8289-d599a1eea207" target="_blank">
-  <button>Open Registration App</button>
-  </a>
+  <form action="https://script.google.com/macros/s/AKfycbz7SQfVlNhu60rmEZ6iD_pJ5ATV4x9hC__KDUDbkMRpz7WYZn5gShCWAxnsZ7cTjZ-tNA/exec" method="POST">
+  <input type="text" name="name" placeholder="Full Name" required>
+  <br>
+  <input type="tel" name="mobile" placeholder="Mobile Number" required>
+  <br><br>
+  <button type="submit">Submit</button>
+</form>
  
   <div class="thank-you" id="thanksMsg">✅ Thank you! You're checked in.</div>
   <p style="margin-top: 30px; font-size: 0.9rem; color: gray;">
